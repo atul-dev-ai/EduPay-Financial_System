@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Modal,
   View,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TransactionStatus } from '../types/wallet';
@@ -35,12 +36,52 @@ export const PaymentResultModal: React.FC<PaymentResultModalProps> = ({
   const isSuccess = status === 'SUCCESS';
   const isPending = status === 'PENDING';
 
+  // Animation values
+  const scaleAnim = useRef(new Animated.Value(0.3)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    if (visible) {
+      scaleAnim.setValue(0.3);
+      fadeAnim.setValue(0);
+      slideAnim.setValue(30);
+
+      Animated.parallel([
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          friction: 5,
+          tension: 40,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.spring(slideAnim, {
+          toValue: 0,
+          friction: 6,
+          tension: 50,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [visible]);
+
   return (
     <Modal visible={visible} animationType="fade" transparent>
       <View style={styles.overlay}>
-        <SafeAreaView style={styles.card}>
-          {/* Status Icon */}
-          <View
+        <Animated.View
+          style={[
+            styles.card,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }, { scale: scaleAnim }],
+            },
+          ]}>
+          {/* Status Animated Icon Circle */}
+          <Animated.View
             style={[
               styles.iconCircle,
               isSuccess
@@ -48,6 +89,7 @@ export const PaymentResultModal: React.FC<PaymentResultModalProps> = ({
                 : isPending
                 ? styles.bgPending
                 : styles.bgFailed,
+              { transform: [{ scale: scaleAnim }] },
             ]}>
             <Ionicons
               name={
@@ -60,7 +102,7 @@ export const PaymentResultModal: React.FC<PaymentResultModalProps> = ({
               size={40}
               color="#FFFFFF"
             />
-          </View>
+          </Animated.View>
 
           {/* Status Title & Message */}
           <Text style={styles.title}>
@@ -128,7 +170,7 @@ export const PaymentResultModal: React.FC<PaymentResultModalProps> = ({
               </Text>
             </TouchableOpacity>
           </View>
-        </SafeAreaView>
+        </Animated.View>
       </View>
     </Modal>
   );
@@ -149,6 +191,11 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 380,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.2,
+    shadowRadius: 20,
+    elevation: 10,
   },
   iconCircle: {
     width: 72,
@@ -157,6 +204,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
+    shadowColor: '#10B981',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 6,
   },
   bgSuccess: {
     backgroundColor: '#10B981',

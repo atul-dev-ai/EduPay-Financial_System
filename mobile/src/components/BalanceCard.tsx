@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  LayoutAnimation,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/theme';
 import { formatTaka } from '../utils/currency';
@@ -23,6 +29,11 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
 }) => {
   const [isVisible, setIsVisible] = useState(false);
 
+  const toggleVisibility = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setIsVisible(!isVisible);
+  };
+
   return (
     <View style={styles.card}>
       {/* Header with Greeting & Toggle */}
@@ -32,7 +43,7 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
           <Text style={styles.nameText}>{userName}</Text>
         </View>
         <TouchableOpacity
-          onPress={() => setIsVisible(!isVisible)}
+          onPress={toggleVisibility}
           style={styles.eyeButton}
           activeOpacity={0.7}
           accessibilityLabel={isVisible ? 'Hide balance' : 'Show balance'}>

@@ -5,6 +5,8 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  Image,
+  LayoutAnimation,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -73,6 +75,8 @@ export default function HomeScreen() {
     setIsPinModalVisible(false);
     if (!activePayment) return;
 
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
     // Deduct from wallet balance (Poisha)
     const newTxnId = `TXN-BC-${Math.floor(100000 + Math.random() * 900000)}`;
     setWallet((prev) => ({
@@ -115,14 +119,16 @@ export default function HomeScreen() {
       {/* Top App Header */}
       <View style={styles.header}>
         <View style={styles.logoRow}>
-          <View style={styles.logoCircle}>
-            <Ionicons name="shield-checkmark" size={18} color="#FFFFFF" />
-          </View>
+          <Image
+            source={require('../../assets/images/logo.png')}
+            style={styles.brandLogo}
+            resizeMode="contain"
+          />
           <View>
-            <Text style={styles.appTitle}>BrainCampus Pay</Text>
+            <Text style={styles.appTitle}>EduPay</Text>
             <View style={styles.kycBadge}>
               <Ionicons name="checkmark-circle" size={10} color="#10B981" />
-              <Text style={styles.kycText}>Verified Parent</Text>
+              <Text style={styles.kycText}>Verified Parent • Atul Paul</Text>
             </View>
           </View>
         </View>
@@ -312,13 +318,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  logoCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
-    backgroundColor: '#2547E8',
-    justifyContent: 'center',
-    alignItems: 'center',
+  brandLogo: {
+    width: 42,
+    height: 42,
+    borderRadius: 10,
   },
   appTitle: {
     fontSize: 16,

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  LayoutAnimation,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -23,6 +24,11 @@ type PayMode = 'SCHOOL_FEES' | 'SCAN_QR' | 'SEND_MONEY';
 export default function PayScreen() {
   const router = useRouter();
   const [mode, setMode] = useState<PayMode>('SCHOOL_FEES');
+
+  const switchMode = (newMode: PayMode) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setMode(newMode);
+  };
 
   // Form states
   const [studentId, setStudentId] = useState('BC-2024-089');
@@ -102,7 +108,7 @@ export default function PayScreen() {
               styles.tabBtn,
               mode === 'SCHOOL_FEES' && styles.tabBtnActive,
             ]}
-            onPress={() => setMode('SCHOOL_FEES')}
+            onPress={() => switchMode('SCHOOL_FEES')}
             activeOpacity={0.8}>
             <Ionicons
               name="school-outline"
@@ -120,7 +126,7 @@ export default function PayScreen() {
 
           <TouchableOpacity
             style={[styles.tabBtn, mode === 'SCAN_QR' && styles.tabBtnActive]}
-            onPress={() => setMode('SCAN_QR')}
+            onPress={() => switchMode('SCAN_QR')}
             activeOpacity={0.8}>
             <Ionicons
               name="qr-code-outline"
@@ -141,7 +147,7 @@ export default function PayScreen() {
               styles.tabBtn,
               mode === 'SEND_MONEY' && styles.tabBtnActive,
             ]}
-            onPress={() => setMode('SEND_MONEY')}
+            onPress={() => switchMode('SEND_MONEY')}
             activeOpacity={0.8}>
             <Ionicons
               name="paper-plane-outline"

@@ -1,7 +1,7 @@
 import { Transaction, SchoolInvoice, UserWallet } from '../types/wallet';
 
 export const mockUserWallet: UserWallet = {
-  userName: 'Rafiqul Islam',
+  userName: 'Atul Paul',
   userPhone: '+880 1712-345678',
   availableBalancePoisha: 1245000, // ৳ 12,450.00
   onHoldBalancePoisha: 0,
